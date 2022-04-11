@@ -15,11 +15,12 @@ use App\Http\Controllers\Api;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+//only auth
+//Route::middleware('auth')->group(function (){
+Route::group([],function (){
+    Route::apiResource('equipment',Api\EquipmentController::class);
+
+    Route::get('equipment-type',[Api\EquipmentTypeController::class,'index'])->name('equipment-type');
+
 });
 
-
-Route::apiResource('equipment',Api\EquipmentController::class);
-
-Route::get('equipment-type',[Api\EquipmentTypeController::class,'index'])->name('equipment-type');
