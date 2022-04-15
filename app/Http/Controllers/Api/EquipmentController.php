@@ -10,6 +10,7 @@ use App\Models\Equipment;
 use App\Http\Controllers\ApiController;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class EquipmentController extends ApiController
 {
@@ -34,12 +35,14 @@ class EquipmentController extends ApiController
      */
     public function store(StoreEquipment $request)
     {
-
         $equipments = new Collection();
-        foreach ($request->all() as $e) {
-            $equipment = Equipment::create($e);
-            $equipments->push($equipment);
-        }
+        DB::transaction(function () use ($equipments, $request) {
+            foreach ($request->all() as $e) {
+                $equipment = Equipment::create($e);
+                $equipments->push($equipment);
+            }
+        });
+
         return EquipmentJson::collection($equipments)->toResponse($request);
     }
 

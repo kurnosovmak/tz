@@ -18,18 +18,6 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
-        if(User::count()<1){
-            User::create([
-                'name'=>'admin',
-                'email'=>'admin',
-                'email_verified_at'=>now(),
-                'password'=>Hash::make('admin'),
-            ]);
-
-        }
-        $token = User::first()->createToken('api', ['*']);
-        $this->command->info('Token - '.$token->plainTextToken);
-
         $this->call([
             EquipmentTypesSeeder::class,
         ]);

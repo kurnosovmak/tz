@@ -7,6 +7,14 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateEquipment extends FormRequest
 {
+    protected $serialNumberService;
+
+    public function __construct(SerialNumberService $serialNumberService)
+    {
+        $this->serialNumberService = $serialNumberService;
+
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -25,19 +33,20 @@ class UpdateEquipment extends FormRequest
     public function rules()
     {
         $error = [
-            'serial_number'=>null,
-            'equipment_type_id'=>null,
+            'serial_number' => null,
+            'equipment_type_id' => null,
         ];
 
-        $eti = $this->get('equipment_type_id');
+        $type_id = $this->get('equipment_type_id');
         $sn = $this->get('serial_number');
 
-        if($eti || $sn){
-            if(!$this->canSerialNumber($eti,$sn)){
-                if($eti){
+        if ($type_id || $sn) {
+
+            if (!$this->canSerialNumber($type_id, $sn)) {
+                if ($type_id) {
                     $error['equipment_type_id'] = 'The equipment type mask does not match the serial number.';
                 }
-                if($sn){
+                if ($sn) {
                     $error['serial_number'] = 'The serial number does not match the mask.';
                 }
             }
@@ -49,9 +58,8 @@ class UpdateEquipment extends FormRequest
                 'string',
                 'min:3',
                 'unique:equipments,serial_number',
-                function($attribute,$value,$fail) use($error){
-                    if($error['serial_number'])
-                    {
+                function ($attribute, $value, $fail) use ($error) {
+                    if ($error['serial_number']) {
                         $fail($error['serial_number']);
                     }
                 }
@@ -60,9 +68,8 @@ class UpdateEquipment extends FormRequest
             'equipment_type_id' => [
                 'integer',
                 'exists:equipment_types,id',
-                function($attribute,$value,$fail) use ($error){
-                    if($error['equipment_type_id'])
-                    {
+                function ($attribute, $value, $fail) use ($error) {
+                    if ($error['equipment_type_id']) {
                         $fail($error['equipment_type_id']);
                     }
                 }
@@ -78,11 +85,11 @@ class UpdateEquipment extends FormRequest
      * @param string|null $new_serial_number
      * @return bool
      */
-    private function canSerialNumber(int|null $equipment_type_id,string|null $new_serial_number): bool
+    private function canSerialNumber(int|null $equipment_type_id, string|null $new_serial_number): bool
     {
-        $eti = $equipment_type_id??$this->equipment->equipment_type_id;
-        $sn = $new_serial_number??$this->equipment->serial_number;
+        $type = $equipment_type_id ?? $this->equipment->equipment_type_id;
+        $sn = $new_serial_number ?? $this->equipment->serial_number;
 
-        return SerialNumberService::canSerialNumber($eti,$sn);
+        return $this->serialNumberService->isValidSerialNumber($type, $sn);
     }
 }

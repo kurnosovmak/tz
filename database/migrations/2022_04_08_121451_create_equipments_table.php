@@ -20,7 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('equipment_type_id');
             $table->foreign('equipment_type_id')->references('id')->on('equipment_types');
 
-            $table->string('serial_number',256)->unique();
+            $table->string('serial_number',255)->unique();
 
             $table->text('note')->nullable();
 

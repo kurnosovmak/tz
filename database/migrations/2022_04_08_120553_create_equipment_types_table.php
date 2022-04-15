@@ -17,11 +17,10 @@ return new class extends Migration
 
             $table->id();
 
-            $table->string('name',256);
+            $table->string('name',255);
 
-            $table->string('serial_number_mask',256);
+            $table->string('serial_number_mask',255);
 
-            $table->timestamps();
         });
     }
 

@@ -19,7 +19,6 @@ class EquipmentTypeJson extends JsonResource
             'id'=>$this->id,
             'name'=>$this->name,
             'serial_number_mask'=>$this->serial_number_mask,
-            'created_at'=>Carbon::make($this->created_at)->format('d.m.Y'),
         ];
     }
 }

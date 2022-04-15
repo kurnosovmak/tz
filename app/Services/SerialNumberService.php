@@ -15,13 +15,13 @@ class SerialNumberService
      * @param string $new_serial_number
      * @return bool
      */
-    public static function canSerialNumber(int $equipment_type_id, string $new_serial_number): bool
+    public function isValidSerialNumber(int $equipment_type_id, string $new_serial_number): bool
     {
         $type = EquipmentType::find($equipment_type_id);
         if (!$type || strlen($new_serial_number) != strlen($type->serial_number_mask)) {
             return false;
         }
-        $ger = self::getRegStringByMask($type->serial_number_mask);
+        $ger = self::generateRegExpByMask($type->serial_number_mask);
 
 
         return preg_match($ger, $new_serial_number) == false ? false : true;
@@ -33,7 +33,7 @@ class SerialNumberService
      * @param string $mask
      * @return string
      */
-    public static function getRegStringByMask(string $mask): string
+    private function generateRegExpByMask(string $mask): string
     {
         $mask = str_split($mask);
         $ger = '/';

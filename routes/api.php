@@ -15,12 +15,6 @@ use App\Http\Controllers\Api;
 |
 */
 
-//only auth
-//Route::middleware('auth')->group(function (){
-Route::group([],function (){
-    Route::apiResource('equipment',Api\EquipmentController::class);
+Route::apiResource('equipment',Api\EquipmentController::class);
 
-    Route::get('equipment-type',[Api\EquipmentTypeController::class,'index'])->name('equipment-type');
-
-});
-
+Route::get('equipment-type',[Api\EquipmentTypeController::class,'index'])->name('equipment-type');
