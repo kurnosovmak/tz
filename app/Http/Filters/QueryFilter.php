@@ -49,18 +49,20 @@ abstract class QueryFilter
         );
     }
 
-
-    public function filters()
+    /**
+     * Get query.
+     *
+     * @return array|string|null
+     */
+    public function filters(): array|string|null
     {
         return $this->request->query();
     }
 
-    protected function paramToArray($param)
-    {
-        return explode($this->delimiter, $param);
-    }
-
-    public static function camelCase($string, $dontStrip = [])
+    /**
+     * @return string
+     */
+    public static function camelCase($string, $dontStrip = []): string
     {
 
         return lcfirst(str_replace(' ', '', ucwords(preg_replace('/^a-z0-9' . implode('', $dontStrip) . ']+/', ' ', $string))));

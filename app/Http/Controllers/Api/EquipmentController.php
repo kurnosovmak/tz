@@ -11,12 +11,14 @@ use App\Http\Controllers\ApiController;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class EquipmentController extends ApiController
 {
     /**
      * Get all equipments.
      *
+     * @param EquipmentFilter $filter
      * @return JsonResponse
      */
     public function index(EquipmentFilter $filter): JsonResponse
@@ -33,15 +35,9 @@ class EquipmentController extends ApiController
      * @param StoreEquipment $request
      * @return JsonResponse
      */
-    public function store(StoreEquipment $request)
+    public function store(StoreEquipment $request): JsonResponse
     {
-        $equipments = new Collection();
-        DB::transaction(function () use ($equipments, $request) {
-            foreach ($request->all() as $e) {
-                $equipment = Equipment::create($e);
-                $equipments->push($equipment);
-            }
-        });
+        $equipments = Equipment::createMany(collect($request->all()));
 
         return EquipmentJson::collection($equipments)->toResponse($request);
     }
@@ -52,7 +48,7 @@ class EquipmentController extends ApiController
      * @param Equipment $equipment
      * @return JsonResponse
      */
-    public function show(Equipment $equipment)
+    public function show(Equipment $equipment): JsonResponse
     {
         return (new EquipmentJson($equipment))->toResponse(null);
     }
@@ -65,7 +61,7 @@ class EquipmentController extends ApiController
      * @param Equipment $equipment
      * @return JsonResponse
      */
-    public function update(UpdateEquipment $request, Equipment $equipment)
+    public function update(UpdateEquipment $request, Equipment $equipment): JsonResponse
     {
         $equipment->fill($request->all())->save();
 
@@ -78,7 +74,7 @@ class EquipmentController extends ApiController
      * @param Equipment $equipment
      * @return JsonResponse
      */
-    public function destroy(Equipment $equipment)
+    public function destroy(Equipment $equipment): JsonResponse
     {
         $equipment->delete();
         return response()->json(null, 204);
