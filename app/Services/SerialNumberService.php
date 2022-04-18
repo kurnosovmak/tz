@@ -6,7 +6,7 @@ namespace App\Services;
 
 use App\Models\EquipmentType;
 
-class SerialNumberService
+class SerialNumberService extends Service
 {
     /**
      * Checks the new number by mask

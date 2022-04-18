@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -41,4 +42,22 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Register new user.
+     *
+     *
+     * @param string $email
+     * @param string $password
+     * @return User
+     */
+    public static function register(string $email,string $password): User
+    {
+        return User::create([
+            'name' => $email,
+            'email' => $email,
+            'password' => Hash::make($password)
+        ]);
+    }
+
 }

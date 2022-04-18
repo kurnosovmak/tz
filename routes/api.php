@@ -15,6 +15,17 @@ use App\Http\Controllers\Api;
 |
 */
 
-Route::apiResource('equipment',Api\EquipmentController::class);
+// Auth only
+Route::middleware('auth:sanctum')->group(function () {
 
-Route::get('equipment-type',[Api\EquipmentTypeController::class,'index'])->name('equipment-type');
+    Route::post('logout', [Api\AuthController::class, 'logout'])->name('logout');
+
+    Route::apiResource('equipment', Api\EquipmentController::class);
+
+    Route::get('equipment-type', [Api\EquipmentTypeController::class, 'index'])->name('equipment-type');
+});
+
+
+// All
+Route::post('login', [Api\AuthController::class, 'login'])->name('login');
+Route::post('register', [Api\AuthController::class, 'register'])->name('register');
